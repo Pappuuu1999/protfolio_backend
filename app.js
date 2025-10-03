@@ -12,13 +12,22 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS setup - allow all origins for development
-app.use(
-  cors({
-    origin: true, // Allow all origins
-    credentials: true,
-  })
-);
+// CORS headers middleware (ensures headers on all platforms, including Vercel)
+app.use((req, res, next) => {
+  const requestOrigin = req.headers.origin || "*";
+  res.header("Access-Control-Allow-Origin", requestOrigin);
+  res.header("Vary", "Origin");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
+// CORS setup (express-cors for robust handling)
+app.use(cors({ origin: true, credentials: true }));
 
 // Serve static images (maps to Backend/asset)
 const __filename = fileURLToPath(import.meta.url);
