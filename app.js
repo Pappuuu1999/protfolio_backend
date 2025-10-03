@@ -12,15 +12,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS setup (env configurable)
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map(s => s.trim());
+// CORS setup - allow all origins for development
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: true, // Allow all origins
     credentials: true,
   })
 );
@@ -29,7 +24,9 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/assets", express.static(path.join(__dirname, "asset")));
+// Expose `/api/assets` as well for compatibility with deployed URLs
 app.use("/api/assets", express.static(path.join(__dirname, "asset")));
+// Keep only local /assets path for simplicity in local dev
 
 // API routes
 app.get("/api/projects", (req, res) => {

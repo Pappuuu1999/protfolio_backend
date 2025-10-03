@@ -1,18 +1,9 @@
-import express from "express";
-import cors from "cors";
+import dotenv from "dotenv";
+import app from "./app.js";
 
-const app = express();
+dotenv.config();
+const PORT = process.env.PORT || 5000;
 
-// ✅ Allow frontend domain
-app.use(cors({
-  origin: "https://portfolio-4vty.vercel.app", // your frontend domain
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-
-// Example route
-app.get("/api/projects", (req, res) => {
-  res.json([{ id: 1, name: "My Project" }]);
+app.listen(PORT, () => {
+  console.log(`🚀 Backend running on port ${PORT}`);
 });
-
-app.listen(5000, () => console.log("Server running..."));
