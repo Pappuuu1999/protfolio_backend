@@ -25,10 +25,11 @@ app.use(
   })
 );
 
-// Serve static images from /assets (maps to Backend/asset)
+// Serve static images (maps to Backend/asset)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/assets", express.static(path.join(__dirname, "asset")));
+app.use("/api/assets", express.static(path.join(__dirname, "asset")));
 
 // API routes
 app.get("/api/projects", (req, res) => {
